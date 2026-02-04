@@ -6,27 +6,86 @@
     <title>Be My Valentine</title>
     <link rel="stylesheet" href="css/valentine.css" />
   </head>
+
   <body>
     <div id="valentineQuestion"><b>Will you be my valentine?</b></div>
-    <button class="answerButton" onclick="location.href='thankyou.html'">
+
+    <button class="answerButton" id="yesButton" onclick="location.href='lastpage.html'">
       Yes
     </button>
-    <button class="answerButton" id="noButton">I no no wanna o(╥﹏╥)o</button>
+
+    <button class="answerButton" id="noButton">No</button>
+
     <br />
-    <img src="please.png" height="498px" width="150px" alt="cat asking question" class="responsive" />
+
+    <img
+      src="please.png"
+      height="498px"
+      width="150px"
+      alt="cat asking question"
+      class="responsive"
+    />
+
+    <audio id="disableSound" src="sound/alarm.wav" preload="auto"></audio>
 
     <script>
-      document
-        .getElementById("noButton")
-        .addEventListener("click", function () {
-          var yesButton = document.querySelector(
-            'button[onclick*="thankyou.html"]'
-          );
-          var currentFontSize = parseInt(
-            window.getComputedStyle(yesButton).fontSize
-          );
-          yesButton.style.fontSize = currentFontSize + 10 + "px"; // Increase font size by 5px
-        });
+      let noClicks = 0;
+
+      const funnyMessages = [
+        "Are you suuuuure? 🥺",
+        "Think again 😼",
+        "My heart is breaking 💔",
+        "Last chance!!! 😭",
+        "Stop playing hard to get 😆",
+        "I will cry now... 😿",
+        "You clicked no WAY too much 😂",
+        "Just say yes already 💘",
+        "Fine, be that way... 😤",
+        "I guess I'll just be lonely... 😢",
+        "THIS IS YOUR FINAL WARNING ⚠️",
+        "JETZ DRRUCKK JA DU DEPP! 😜",
+        "JETZ DRRUCKK JA DU DEPP! 😜",
+        "JETZ DRRUCKK JA DU DEPP! 😜"
+      ];
+
+      const noButton = document.getElementById("noButton");
+      const yesButton = document.getElementById("yesButton");
+      const question = document.getElementById("valentineQuestion");
+      const sound = document.getElementById("disableSound");
+
+      noButton.addEventListener("click", function () {
+        noClicks++;
+
+        // Grow YES button
+        const size = parseInt(window.getComputedStyle(yesButton).fontSize, 10);
+        yesButton.style.fontSize = size + 10 + "px";
+
+        // Change message (wenn mehr Klicks als Sprüche -> random)
+        const msg =
+          noClicks <= funnyMessages.length
+            ? funnyMessages[noClicks - 1]
+            : funnyMessages[Math.floor(Math.random() * funnyMessages.length)];
+
+        question.innerHTML = "<b>" + msg + "</b>";
+
+        // SPECIAL EVENT AT 15 CLICKS
+        if (noClicks === 15) {
+          question.innerHTML = "<b>NO BUTTON HAS BEEN DISABLED 🚫😂</b>";
+
+          // hide no button
+          noButton.style.display = "none";
+
+          // crazy animation
+          yesButton.style.animation = "shake 0.3s infinite";
+          yesButton.style.backgroundColor = "hotpink";
+          yesButton.innerHTML = "YOU HAVE NO CHOICE 😈";
+
+          // 🔊 play sound
+          sound.currentTime = 0;
+          sound.play().catch(() => {
+          });
+        }
+      });
     </script>
   </body>
 </html>
